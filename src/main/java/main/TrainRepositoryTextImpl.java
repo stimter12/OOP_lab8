@@ -23,27 +23,39 @@ public class TrainRepositoryTextImpl implements TrainRepository {
         outputArray(t, file);
     }
 
+//    @Override
+//    public List<Train> readArray(File file) {
+//        try (BufferedReader inputStream = new BufferedReader(new FileReader(file))) {
+//            List<Train> trains = new ArrayList<>();
+//            //replace with stream
+//            while (inputStream.ready()) {
+//                String stringTrain = inputStream.readLine();
+//                String[] stringTrainArray = stringTrain.split(",");
+//                trains.add(TrainFactory.createTrain(
+//                        Integer.parseInt(stringTrainArray[0]), stringTrainArray[1],
+//                        Integer.parseInt(stringTrainArray[2]), stringTrainArray[3],
+//                        Integer.parseInt(stringTrainArray[4]),stringTrainArray[5],
+//                        Integer.parseInt(stringTrainArray[6])));
+//            }
+//            return trains;
+//        } catch (IOException e) {
+//            System.err.println("File not found");
+//        }
+//        return null;
+//    }
+
     @Override
     public List<Train> readArray(File file) {
         try (BufferedReader inputStream = new BufferedReader(new FileReader(file))) {
-            List<Train> trains = new ArrayList<>();
-            //replace with stream
-            while (inputStream.ready()) {
-                String stringTrain = inputStream.readLine();
-                String[] stringTrainArray = stringTrain.split(",");
-                trains.add(TrainFactory.createTrain(
-                        Integer.parseInt(stringTrainArray[0]), stringTrainArray[1],
-                        Integer.parseInt(stringTrainArray[2]), stringTrainArray[3],
-                        Integer.parseInt(stringTrainArray[4]),stringTrainArray[5],
-                        Integer.parseInt(stringTrainArray[6])));
-            }
-            return trains;
+            return inputStream.lines().map(line -> line.trim().split(","))
+                    .map(sta -> TrainFactory.createTrain(Integer.parseInt(sta[0]), sta[1],
+                            Integer.parseInt(sta[2]), sta[3],
+                            Integer.parseInt(sta[4]), sta[5],
+                            Integer.parseInt(sta[6]))).toList();
         } catch (IOException e) {
-            System.err.println("File not found");
+            throw new RuntimeException(e);
         }
-        return null;
     }
-
 
     @Override
     public List<Train> readArray(String fileName) {
